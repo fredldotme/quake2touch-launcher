@@ -1,0 +1,15 @@
+{
+    "name": "quake2touch.fredldotme",
+    "description": "A Quake II port for Ubuntu Touch",
+    "architecture": "@CLICK_ARCH@",
+    "title": "Quake2 Touch",
+    "hooks": {
+        "quake2touch": {
+            "apparmor": "quake2touch.apparmor",
+            "desktop":  "quake2touch.desktop"
+        }
+    },
+    "version": "1.0.0",
+    "maintainer": "Alfred Neumayer <dev.beidl@gmail.com>",
+    "framework" : "@CLICK_FRAMEWORK@"
+}

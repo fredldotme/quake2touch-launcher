@@ -1,0 +1,21 @@
+clickable_minimum_required: 7.1.2
+builder: cmake
+kill: quake2touch
+dependencies_ppa:
+  - "\"deb [arch=amd64] http://archive.ubuntu.com/ubuntu xenial-backports universe restricted multiverse main\"",
+  - "\"deb [arch=arm64,armhf] http://ports.ubuntu.com/ubuntu-ports xenial-backports universe restricted multiverse main\""
+dependencies_target":
+  - libdbus-1-dev
+  - libudev-dev
+  - libtool
+  - mesa-common-dev
+  - bison
+  - flex
+  - gettext
+  - libtool
+  - libaio-dev
+  - libpulse-dev
+  - libogg-dev
+  - libgles2-mesa-dev
+  - libegl1-mesa-dev
+  - zlib1g-dev
