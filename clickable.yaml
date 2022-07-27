@@ -24,7 +24,7 @@ dependencies_target:
   - libwayland-dev
   - libsdl2-dev
   - libopenal-dev
-  - wayland-protocols
+  - wayland-protocols:all
   - zlib1g-dev
   - unzip
 install_lib:
