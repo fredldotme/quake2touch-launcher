@@ -1,0 +1,4 @@
+[submodule "game"]
+	path = game
+	url = https://github.com/fredldotme/quake2-touch.git
+	branch = ubuntutouch
