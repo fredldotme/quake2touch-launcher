@@ -1,7 +1,8 @@
 [Desktop Entry]
 _Name=Quake2 Touch
 Exec=quake2touch %U
-Icon=assets/logo.svg
+Icon=assets/logo.jpg
 Terminal=false
 Type=Application
 X-Ubuntu-Touch=true
+X-Ubuntu-Supported-Orientations=primary

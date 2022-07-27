@@ -18,7 +18,6 @@ set(QT_IMPORTS_DIR "lib/${ARCH_TRIPLET}")
 
 set(PROJECT_NAME "quake2touch")
 set(FULL_PROJECT_NAME "quake2touch.fredldotme")
-set(DATA_DIR /)
 set(DESKTOP_FILE_NAME ${PROJECT_NAME}.desktop)
 
 # This command figures out the minimum SDK framework for use in the manifest
@@ -42,8 +41,8 @@ endif()
 
 configure_file(manifest.json.in ${CMAKE_CURRENT_BINARY_DIR}/manifest.json)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/manifest.json DESTINATION ${CMAKE_INSTALL_PREFIX})
-install(FILES ${PROJECT_NAME}.apparmor DESTINATION ${DATA_DIR})
-install(FILES assets/logo.svg DESTINATION assets)
+install(FILES ${PROJECT_NAME}.apparmor DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(FILES assets/logo.jpg DESTINATION assets)
 
 qt5_add_resources(QT_RESOURCES qml/qml.qrc)
 qt5_add_resources(QT_RESOURCES assets/assets.qrc)
@@ -71,7 +70,7 @@ add_custom_target(${DESKTOP_FILE_NAME} ALL
     COMMAND sed -i 's/${PROJECT_NAME}-//g' ${CMAKE_CURRENT_BINARY_DIR}/${DESKTOP_FILE_NAME}
 )
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${DESKTOP_FILE_NAME} DESTINATION ${DATA_DIR})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${DESKTOP_FILE_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 add_subdirectory(po)
 add_subdirectory(plugins)

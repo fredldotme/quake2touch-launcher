@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     QQuickView *view = new QQuickView();
     view->setSource(QUrl("qrc:/Main.qml"));
     view->setResizeMode(QQuickView::SizeRootObjectToView);
-    view->show();
+    view->showFullScreen();
 
     return app->exec();
 }

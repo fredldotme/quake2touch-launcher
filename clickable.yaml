@@ -1,10 +1,11 @@
 clickable_minimum_required: 7.1.2
-builder: cmake
+builder: custom
+build: "bash ${ROOT}/build.sh"
 kill: quake2touch
 dependencies_ppa:
-  - "\"deb [arch=amd64] http://archive.ubuntu.com/ubuntu xenial-backports universe restricted multiverse main\"",
+  - "\"deb [arch=amd64] http://archive.ubuntu.com/ubuntu xenial-backports universe restricted multiverse main\""
   - "\"deb [arch=arm64,armhf] http://ports.ubuntu.com/ubuntu-ports xenial-backports universe restricted multiverse main\""
-dependencies_target":
+dependencies_target:
   - libdbus-1-dev
   - libudev-dev
   - libtool
@@ -16,6 +17,18 @@ dependencies_target":
   - libaio-dev
   - libpulse-dev
   - libogg-dev
+  - libvorbis-dev
   - libgles2-mesa-dev
   - libegl1-mesa-dev
+  - libmirclient-dev
+  - libwayland-dev
+  - libsdl2-dev
+  - libopenal-dev
+  - wayland-protocols
   - zlib1g-dev
+  - unzip
+install_lib:
+  - /usr/lib/${ARCH_TRIPLET}/libvorbisfile.so.3*
+  - /usr/lib/${ARCH_TRIPLET}/libopenal.so.1*
+install_bin:
+  - /usr/bin/unzip

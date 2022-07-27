@@ -3,7 +3,7 @@
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
+ * the Free Software Foundation; version 2.
  *
  * quake2touch is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,14 +14,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QDebug>
+#include <QtQml>
+#include <QtQml/QQmlContext>
 
-#include "example.h"
+#include "plugin.h"
+#include "utils.h"
 
-Example::Example() {
-
-}
-
-void Example::speak() {
-    qDebug() << "hello world!";
+void Quake2Plugin::registerTypes(const char *uri) {
+    //@uri Quake2Touch
+    qmlRegisterSingletonType<Utils>(uri, 1, 0, "Utils", [](QQmlEngine*, QJSEngine*) -> QObject* { return new Utils; });
 }
