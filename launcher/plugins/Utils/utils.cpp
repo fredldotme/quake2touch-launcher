@@ -64,6 +64,35 @@ Utils::Utils() {
 
 void Utils::startGame(const QString& gameName)
 {
+    char* args[] = {"./bin/quake2-gles2", NULL};
+    runGame(gameName, args);
+}
+
+void Utils::hostMultiplayerGame(const QString& gameName, const QString& gameMode)
+{
+    char* mode = strdup(gameMode.toUtf8().data());
+    char* args[] = {"./bin/quake2-gles2",
+                    "+set", "port", "27910",
+                    "+listen",
+                    mode, "1",
+                    NULL};
+    runGame(gameName, args);
+}
+
+void Utils::joinMultiplayerGame(const QString& gameName, const QString& serverAddress, const QString& playerName)
+{
+    char* server = strdup(serverAddress.toUtf8().data());
+    char* player = strdup(playerName.toUtf8().data());
+    char* args[] = {"./bin/quake2-gles2",
+                    "+set", "port", "27910",
+                    "+connect", server,
+                    "+set", "name", player,
+                    NULL};
+    runGame(gameName, args);
+}
+
+void Utils::runGame(const QString& gameName, char **args)
+{
     // Set gamename for the engine to pick up the right .pak files
     setenv("QUAKE2_GAMENAME", gameName.toUtf8().data(), true);
 
@@ -71,7 +100,6 @@ void Utils::startGame(const QString& gameName)
     char* appId = getenv("APP_ID");
     setenv("DESKTOP_FILE_HINT", appId, true);
 
-    char *args[] = {"./bin/quake2-gles2", NULL};
     execvp(args[0], args);
 }
 

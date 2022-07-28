@@ -35,6 +35,8 @@ public:
     ~Utils() = default;
 
     Q_INVOKABLE void startGame(const QString& gameName);
+    Q_INVOKABLE void hostMultiplayerGame(const QString& gameName, const QString& gameMode);
+    Q_INVOKABLE void joinMultiplayerGame(const QString& gameName, const QString& serverAddress, const QString& playerName);
     Q_INVOKABLE void deleteGame(const QString& gameName);
     Q_INVOKABLE void copyGameFiles(const QString& directory);
     Q_INVOKABLE void refreshGames();
@@ -43,6 +45,8 @@ public:
 private:
     QStringList games();
     qreal progress();
+
+    void runGame(const QString& gameName, char ** args);
 
     void unpack();
     void downloadEnded(QNetworkReply* reply);

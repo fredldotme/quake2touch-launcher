@@ -35,6 +35,11 @@ MainView {
 
     property string selectedGameName : ""
 
+    Settings {
+        id: userSettings
+        property string playerName: "Player"
+    }
+
     Item {
         id: gameImportRoot
         property list<ContentItem> importItems
@@ -114,6 +119,13 @@ MainView {
                         }
                     },*/
                     Action {
+                        iconName: "preferences-desktop-accounts-symbolic"
+                        text: "Player name"
+                        onTriggered: {
+                            PopupUtils.open(userSettingsDialog)
+                        }
+                    },
+                    Action {
                         iconName: "info"
                         text: "Info"
                         onTriggered: {
@@ -181,14 +193,32 @@ MainView {
         Dialog {
             id: startGameDialogue
             title: qsTr("Start")
-            text: qsTr("Would you like to start this game?")
+            text: qsTr("How would you like to start this game?")
             Button {
-                text: qsTr("Ok")
+                text: qsTr("Singleplayer")
                 color: theme.palette.normal.positive
                 onClicked: {
                     Utils.startGame(selectedGameName)
                 }
             }
+            Button {
+                text: qsTr("Join multiplayer")
+                color: theme.palette.normal.positive
+                onClicked: {
+                    PopupUtils.close(startGameDialogue)
+                    PopupUtils.open(joinMultiplayerDialog)
+                }
+            }
+            /*
+            Button {
+                text: qsTr("Host multiplayer")
+                color: theme.palette.normal.positive
+                onClicked: {
+                    PopupUtils.close(startGameDialogue)
+                    PopupUtils.open(hostMultiplayerDialog)
+                }
+            }
+            */
             Button {
                 text: qsTr("Cancel")
                 color: theme.palette.normal.negative
@@ -246,6 +276,29 @@ MainView {
     }
 
     Component {
+        id: userSettingsDialog
+
+        Dialog {
+            id: userSettingsDialogue
+            title: qsTr("Player name")
+            TextField {
+                id: playerNameField
+                text: userSettings.playerName
+                width: parent.width
+            }
+
+            Button {
+                text: qsTr("Ok")
+                color: theme.palette.normal.positive
+                onClicked: {
+                    userSettings.playerName = playerNameField.text
+                    PopupUtils.close(userSettingsDialogue)
+                }
+            }
+        }
+    }
+
+    Component {
         id: downloadFailedDialog
 
         Dialog {
@@ -257,6 +310,69 @@ MainView {
                 color: theme.palette.normal.negative
                 onClicked: {
                     PopupUtils.close(downloadFailedDialogue)
+                }
+            }
+        }
+    }
+
+    Component {
+        id: joinMultiplayerDialog
+
+        Dialog {
+            id: joinMultiplayerDialogue
+            title: qsTr("Join multiplayer game")
+            text: qsTr("Enter the server address to connect:")
+            TextField {
+                id: serverAddress
+                width: parent.width
+            }
+            Button {
+                text: qsTr("Connect")
+                color: theme.palette.normal.positive
+                enabled: serverAddress.length > 0
+                onClicked: {
+                    Utils.joinMultiplayerGame(selectedGameName, serverAddress.text, userSettings.playerName)
+                }
+            }
+            Button {
+                text: qsTr("Cancel")
+                color: theme.palette.normal.negative
+                onClicked: {
+                    PopupUtils.close(joinMultiplayerDialogue)
+                }
+            }
+        }
+    }
+
+    Component {
+        id: hostMultiplayerDialog
+
+        Dialog {
+            id: hostMultiplayerDialogue
+            title: qsTr("Host multiplayer game")
+            text: qsTr("Start a multiplayer session?")
+
+            readonly property var gameModes : ["Deathmatch", "Co-Operative"]
+            readonly property var gameModesValues : ["+deathmatch", "+coop"]
+
+            OptionSelector {
+                id: gameModeSelector
+                text: qsTr("Game type:")
+                model: gameModes
+                width: parent.width
+            }
+            Button {
+                text: qsTr("Ok")
+                color: theme.palette.normal.positive
+                onClicked: {
+                    Utils.hostMultiplayerGame(selectedGameName, gameModesValues[gameModeSelector.selectedIndex])
+                }
+            }
+            Button {
+                text: qsTr("Cancel")
+                color: theme.palette.normal.negative
+                onClicked: {
+                    PopupUtils.close(hostMultiplayerDialogue)
                 }
             }
         }
