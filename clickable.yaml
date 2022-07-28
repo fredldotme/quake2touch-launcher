@@ -32,3 +32,4 @@ install_lib:
   - /usr/lib/${ARCH_TRIPLET}/libopenal.so.1*
 install_bin:
   - /usr/bin/unzip
+  - /bin/mv
