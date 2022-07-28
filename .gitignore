@@ -1,2 +1,4 @@
 build
+build-*/
 .clickable
+CMakeLists.txt.user*
