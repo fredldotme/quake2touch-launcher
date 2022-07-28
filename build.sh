@@ -85,10 +85,8 @@ function build_3rdparty_autogen {
 }
 
 function build_cmake {
-    if [ "$CLEAN" == "1" ]; then
-        if [ -d build ]; then
-            rm -rf build
-        fi
+    if [ -d build ]; then
+        rm -rf build
     fi
     if [ ! -d build ]; then
         mkdir build
@@ -101,7 +99,9 @@ function build_cmake {
         -DCMAKE_CXX_FLAGS="-isystem $INSTALL/include -L$INSTALL/lib -Wno-deprecated-declarations -Wl,-rpath-link,$INSTALL/lib" \
         -DCMAKE_C_FLAGS="-isystem $INSTALL/include -L$INSTALL/lib -Wno-deprecated-declarations -Wl,-rpath-link,$INSTALL/lib" \
         -DCMAKE_LD_FLAGS="-L$INSTALL/lib" \
-        -DCMAKE_LIBRARY_PATH=$INSTALL/lib $@
+        -DCMAKE_LIBRARY_PATH=$INSTALL/lib \
+        -DCMAKE_PREFIX_PATH=/usr/lib/$MULTIARCH/cmake \
+        -DCMAKE_C_COMPILER=$(CC) -DCMAKE_CXX_COMPILER=$(CXX) $@
     make VERBOSE=1 -j$NUM_PROCS
     if [ -f /usr/bin/sudo ]; then
         sudo make install
