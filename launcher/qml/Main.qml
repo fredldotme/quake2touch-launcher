@@ -268,9 +268,87 @@ MainView {
         Dialog {
             id: infoDialogue
             title: qsTr("About Quake II Touch")
+
+            Column {
+                id: aboutMainColumn
+                width: parent.width
+                spacing: units.gu(4)
+                anchors.topMargin: typicalMargin
+
+                UbuntuShape {
+                    width: Math.min(parent.width, parent.height) / 2
+                    height: width
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    source: Image {
+                        source: "qrc:/assets/logo.jpg"
+                    }
+                }
+
+                Label {
+                    width: parent.width
+                    text: qsTr("Quake II for Ubuntu Touch")
+                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                    horizontalAlignment: Text.AlignHCenter
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        leftMargin: typicalMargin
+                        rightMargin: typicalMargin
+                    }
+                }
+
+                Row {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    spacing: typicalMargin
+
+                    Label {
+                        text: qsTr("Donate via PayPal")
+                        font.underline: true
+                        textSize: Label.Large
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                Qt.openUrlExternally("https://paypal.me/beidl")
+                            }
+                        }
+                    }
+                }
+
+                Label {
+                    text: qsTr("Licensed under GPL v2")
+                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                    horizontalAlignment: Text.AlignHCenter
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        leftMargin: typicalMargin
+                        rightMargin: typicalMargin
+                    }
+                }
+
+                Label {
+                    text: qsTr("Source code on GitHub")
+                    font.underline: true
+                    textSize: Label.Small
+                    horizontalAlignment: Text.AlignHCenter
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            Qt.openUrlExternally("https://github.com/fredldotme/quake2touch-launcher")
+                        }
+                    }
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        leftMargin: typicalMargin
+                        rightMargin: typicalMargin
+                    }
+                }
+            }
+
             Button {
                 text: qsTr("Close")
-                color: theme.palette.normal.negative
+                color: theme.palette.normal.positive
                 onClicked: {
                     PopupUtils.close(infoDialogue)
                 }
