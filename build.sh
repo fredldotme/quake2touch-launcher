@@ -33,14 +33,20 @@ if [ "$ARCH" == "arm64" ]; then
     SFOS_ARCH=aarch64
     SFOS_BIN_GAME=$SRC_DIR/game/Ports/Quake2/Output/Targets/SailfishOS-64/Release/bin/baseq2
     SFOS_BIN_ENGINE=$SRC_DIR/game/Ports/Quake2/Output/Targets/SailfishOS-64/Debug/bin/quake2-gles2
-elif [ "$ARCH" == "arm64" ]; then
+    export CC="aarch64-linux-gnu-gcc"
+    export CXX="aarch64-linux-gnu-g++"
+elif [ "$ARCH" == "armhf" ]; then
     SFOS_ARCH=armv7hl
     SFOS_BIN_GAME=$SRC_DIR/game/Ports/Quake2/Output/Targets/SailfishOS-32/Release/bin/baseq2
     SFOS_BIN_ENGINE=$SRC_DIR/game/Ports/Quake2/Output/Targets/SailfishOS-32/Debug/bin/quake2-gles2
+    export CC="arm-linux-gnueabihf-gcc"
+    export CXX="arm-linux-gnueabihf-g++"
 else
     SFOS_ARCH=x86_64
     SFOS_BIN_GAME=$SRC_DIR/game/Ports/Quake2/Output/Targets/SailfishOS-32-x86/Release/bin/baseq2
     SFOS_BIN_ENGINE=$SRC_DIR/game/Ports/Quake2/Output/Targets/SailfishOS-32-x86/Debug/bin/quake2-gles2
+    export CC="x86_64-linux-gnu-gcc"
+    export CXX="x86_64-linux-gnu-g++"
 fi
 
 # Unset duplicate environment variables that screw with Quake2 Makefiles
