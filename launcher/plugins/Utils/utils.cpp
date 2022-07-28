@@ -45,17 +45,19 @@ Utils::Utils() {
 
         // Move the target file
         const QString cache = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
-        const QString oldFile = cache + QStringLiteral("/Install/Data/baseq2/pak0.pak");
-        const QString newFile = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) +
-                QStringLiteral("/Demo/pak0.pak");
+        const QString oldDir = cache + QStringLiteral("/Install/Data/baseq2");
         const QString newDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) +
-                QStringLiteral("/Demo/");
+                QStringLiteral("/Demo");
 
-        QDir creator(newDir);
-        creator.mkpath(newDir);
+        QStringList args;
+        args << oldDir << newDir;
+        QProcess mover;
+        mover.start("/opt/click.ubuntu.com/quake2touch.fredldotme/current/lib/aarch64-linux-gnu/bin/mv",
+                    args);
+        mover.waitForFinished();
 
-        QFile mover(oldFile);
-        mover.rename(oldFile, newFile);
+
+
         emit downloadSucceeded();
 
         refreshGames();

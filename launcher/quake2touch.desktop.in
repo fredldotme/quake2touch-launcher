@@ -1,5 +1,5 @@
 [Desktop Entry]
-_Name=Quake2 Touch
+_Name=Quake II Touch
 Exec=quake2touch %U
 Icon=assets/logo.jpg
 Terminal=false
