@@ -35,18 +35,21 @@ if [ "$ARCH" == "arm64" ]; then
     SFOS_BIN_ENGINE=$SRC_DIR/game/Ports/Quake2/Output/Targets/SailfishOS-64/Debug/bin/quake2-gles2
     export CC="aarch64-linux-gnu-gcc"
     export CXX="aarch64-linux-gnu-g++"
+    export AR="aarch64-linux-gnu-ar"
 elif [ "$ARCH" == "armhf" ]; then
     SFOS_ARCH=armv7hl
     SFOS_BIN_GAME=$SRC_DIR/game/Ports/Quake2/Output/Targets/SailfishOS-32/Release/bin/baseq2
     SFOS_BIN_ENGINE=$SRC_DIR/game/Ports/Quake2/Output/Targets/SailfishOS-32/Debug/bin/quake2-gles2
     export CC="arm-linux-gnueabihf-gcc"
     export CXX="arm-linux-gnueabihf-g++"
+    export AR="arm-linux-gnueabihf-ar"
 else
     SFOS_ARCH=x86_64
     SFOS_BIN_GAME=$SRC_DIR/game/Ports/Quake2/Output/Targets/SailfishOS-32-x86/Release/bin/baseq2
     SFOS_BIN_ENGINE=$SRC_DIR/game/Ports/Quake2/Output/Targets/SailfishOS-32-x86/Debug/bin/quake2-gles2
     export CC="x86_64-linux-gnu-gcc"
     export CXX="x86_64-linux-gnu-g++"
+    export AR="x86_64-linux-gnu-ar"
 fi
 
 # Unset duplicate environment variables that screw with Quake2 Makefiles
@@ -105,13 +108,6 @@ function build_cmake {
     else
         make install
     fi
-}
-
-function build_3rdparty_cmake {
-    echo "Building: $1"
-    cd $SRC_PATH
-    cd $1
-    build_cmake
 }
 
 function build_project {
