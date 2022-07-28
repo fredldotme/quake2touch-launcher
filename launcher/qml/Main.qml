@@ -281,15 +281,20 @@ MainView {
         Dialog {
             id: userSettingsDialogue
             title: qsTr("Player name")
+
+            Component.onCompleted: {
+                playerNameField.text = userSettings.playerName
+            }
+
             TextField {
                 id: playerNameField
-                text: userSettings.playerName
                 width: parent.width
             }
 
             Button {
                 text: qsTr("Ok")
                 color: theme.palette.normal.positive
+                enabled: playerNameField.length > 0
                 onClicked: {
                     userSettings.playerName = playerNameField.text
                     PopupUtils.close(userSettingsDialogue)
