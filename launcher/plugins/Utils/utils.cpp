@@ -45,9 +45,12 @@ Utils::Utils() {
 
         // Move the target file
         const QString cache = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+        const QString appData = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
         const QString oldDir = cache + QStringLiteral("/Install/Data/baseq2");
-        const QString newDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) +
-                QStringLiteral("/Demo");
+        const QString newDir = appData + QStringLiteral("/Demo");
+
+        QDir cacheDir(appData);
+        cacheDir.mkpath(appData);
 
         QStringList args;
         args << oldDir << newDir;
