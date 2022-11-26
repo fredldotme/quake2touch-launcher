@@ -28,8 +28,6 @@
 #include "utils.h"
 
 Utils::Utils() {
-    connect(&m_netManager, &QNetworkAccessManager::finished, this, &Utils::downloadEnded);
-
     connect(&m_unzipProcess, &QProcess::errorOccurred, this, [=](QProcess::ProcessError error) {
         qDebug() << "unzip error occurred:" << error;
     });
@@ -39,7 +37,7 @@ Utils::Utils() {
         qDebug() << "unzip process finished with exit code:" << exitCode;
 
         if (exitCode != 0) {
-            emit downloadFailed();
+            emit unpackFailed();
             return;
         }
 
@@ -52,16 +50,11 @@ Utils::Utils() {
         QDir cacheDir(appData);
         cacheDir.mkpath(appData);
 
-        QStringList args;
-        args << oldDir << newDir;
-        QProcess mover;
-        mover.start("/opt/click.ubuntu.com/quake2touch.fredldotme/current/lib/aarch64-linux-gnu/bin/mv",
-                    args);
-        mover.waitForFinished();
-
-
-
-        emit downloadSucceeded();
+        if (rename(oldDir.toUtf8().data(), newDir.toUtf8().data()) == 0) {
+            emit unpackSucceeded();
+        } else {
+            emit unpackFailed();
+        }
 
         refreshGames();
     });
@@ -141,63 +134,18 @@ void Utils::refreshGames()
     emit gamesChanged();
 }
 
-void Utils::getDemo()
+void Utils::unpackDemo(const QString& path)
 {
-    const QString downloadUrl =
-            QStringLiteral("https://ftp.gwdg.de/pub/misc/ftp.idsoftware.com/idstuff/quake2/q2-314-demo-x86.exe");
-
-    const QString tmpTarget = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) +
-            QStringLiteral("/demo.zip");
-
-    if (QFile::exists(tmpTarget))
-        QFile::remove(tmpTarget);
-
     const QString cache = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+    const QString tmpTarget = cache + QStringLiteral("/demo.zip");
+    const QString unzipPath =
+            QStringLiteral("/opt/click.ubuntu.com/quake2touch.fredldotme/current/lib/aarch64-linux-gnu/bin/unzip");
+
     QDir cacheDir(cache);
     cacheDir.mkpath(cache);
 
-    const QUrl url(downloadUrl);
-    QNetworkRequest request(url);
-    QNetworkReply *reply = m_netManager.get(request);
-    connect(reply, &QNetworkReply::downloadProgress, this, [=](qint64 received, qint64 total) {
-        m_progress = (qreal)((qreal)received / (qreal)total);
-        progressChanged();
-    });
-}
-
-void Utils::downloadEnded(QNetworkReply* reply)
-{
-    reply->deleteLater();
-
-    QUrl url = reply->url();
-    if (reply->error()) {
-        emit downloadFailed();
-        return;
-    }
-
-    const QString tmpTarget = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) +
-            QStringLiteral("/demo.zip");
-
-    // Save downloaded data to disk
-    QFile file(tmpTarget);
-    if (!file.open(QIODevice::WriteOnly)) {
-        emit downloadFailed();
-        return;
-    }
-
-    file.write(reply->readAll());
-    file.close();
-
-    unpack();
-}
-
-void Utils::unpack()
-{
-    const QString tmpTarget = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) +
-            QStringLiteral("/demo.zip");
-    const QString unzipPath =
-            QStringLiteral("/opt/click.ubuntu.com/quake2touch.fredldotme/current/lib/aarch64-linux-gnu/bin/unzip");
-    const QString cache = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+    qDebug() << "Copying" << path << "to" << tmpTarget;
+    rename(path.toUtf8().data(), tmpTarget.toUtf8().data());
 
     QStringList args;
     args << "-o";
@@ -208,10 +156,5 @@ void Utils::unpack()
     m_unzipProcess.setProgram(unzipPath);
     m_unzipProcess.setArguments(args);
     m_unzipProcess.start();
-}
-
-qreal Utils::progress()
-{
-    return m_progress;
 }
 

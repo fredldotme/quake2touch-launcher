@@ -19,9 +19,6 @@
 
 #include <QObject>
 #include <QByteArray>
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
 #include <QProcess>
 #include <QThread>
 
@@ -29,7 +26,7 @@ class Utils: public QObject {
     Q_OBJECT
 
     Q_PROPERTY(QStringList games READ games NOTIFY gamesChanged)
-    Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
+
 public:
     Utils();
     ~Utils() = default;
@@ -40,26 +37,21 @@ public:
     Q_INVOKABLE void deleteGame(const QString& gameName);
     Q_INVOKABLE void copyGameFiles(const QString& directory);
     Q_INVOKABLE void refreshGames();
-    Q_INVOKABLE void getDemo();
+    Q_INVOKABLE void unpackDemo(const QString& path);
 
 private:
     QStringList games();
-    qreal progress();
 
     void runGame(const QString& gameName, char ** args);
 
     void unpack();
-    void downloadEnded(QNetworkReply* reply);
 
-    qreal m_progress;
-    QNetworkAccessManager m_netManager;
     QProcess m_unzipProcess;
 
 signals:
     void gamesChanged();
-    void progressChanged();
-    void downloadSucceeded();
-    void downloadFailed();
+    void unpackSucceeded();
+    void unpackFailed();
 };
 
 #endif

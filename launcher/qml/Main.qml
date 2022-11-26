@@ -18,6 +18,7 @@ import QtQuick 2.7
 import Lomiri.Components 1.3
 import Lomiri.Components.Popups 1.3
 import Lomiri.Content 0.1
+import Lomiri.DownloadManager 1.2
 import QtQuick.Layouts 1.3
 import Qt.labs.settings 1.0
 
@@ -137,7 +138,7 @@ MainView {
 
         }
 
-        UbuntuListView {
+        LomiriListView {
             id: gamesListView
             anchors {
                 top: header.bottom
@@ -236,12 +237,29 @@ MainView {
             id: downloadGameDialogue
             title: qsTr("Demo download")
             text: qsTr("Would you like to download the Quake II demo?")
+
+            readonly property string demoUrl: "https://ftp.gwdg.de/pub/misc/ftp.idsoftware.com/idstuff/quake2/q2-314-demo-x86.exe"
+
+            SingleDownload {
+                id: download
+                autoStart: true
+                onFinished: {
+                    Utils.unpackDemo(path)
+                }
+                onErrorMessageChanged: {
+                    if (errorMessage == "")
+                        return
+
+                    PopupUtils.close(downloadGameDialogue)
+                    PopupUtils.open(downloadFailedDialog)
+                }
+            }
             ProgressBar {
                 id: progressBar
                 visible: false
                 minimumValue: 0.0
                 maximumValue: 1.0
-                value: Utils.progress
+                value: (download.progress / 100)
             }
             Button {
                 id: downloadGameOkButton
@@ -251,7 +269,7 @@ MainView {
                     downloadGameOkButton.enabled = false
                     downloadGameCancelButton.enabled = false
                     progressBar.visible = true
-                    Utils.getDemo()
+                    download.download(demoUrl)
                 }
             }
             Button {
@@ -264,10 +282,10 @@ MainView {
             }
             Connections {
                 target: Utils
-                onDownloadSucceeded: {
+                onUnpackSucceeded: {
                     PopupUtils.close(downloadGameDialogue)
                 }
-                onDownloadFailed: {
+                onUnpackFailed: {
                     PopupUtils.close(downloadGameDialogue)
                     PopupUtils.open(downloadFailedDialog)
                 }
@@ -396,7 +414,7 @@ MainView {
                 spacing: units.gu(4)
                 anchors.topMargin: typicalMargin
 
-                UbuntuShape {
+                LomiriShape {
                     width: Math.min(parent.width, parent.height) / 2
                     height: width
                     anchors.horizontalCenter: parent.horizontalCenter
