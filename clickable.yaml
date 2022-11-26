@@ -2,9 +2,7 @@ clickable_minimum_required: 7.1.2
 builder: custom
 build: "bash ${ROOT}/build.sh"
 kill: quake2touch
-#dependencies_ppa:
-#  - "\"deb [arch=amd64] http://archive.ubuntu.com/ubuntu xenial-backports universe restricted multiverse main\""
-#  - "\"deb [arch=arm64,armhf] http://ports.ubuntu.com/ubuntu-ports xenial-backports universe restricted multiverse main\""
+framework: ubuntu-sdk-20.04
 dependencies_target:
   - libdbus-1-dev
   - libudev-dev
@@ -32,4 +30,3 @@ install_lib:
   - /usr/lib/${ARCH_TRIPLET}/libopenal.so.1*
 install_bin:
   - /usr/bin/unzip
-  - /bin/mv
