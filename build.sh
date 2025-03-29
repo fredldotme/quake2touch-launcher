@@ -126,7 +126,7 @@ fi
 if [ ! -f "$INSTALL/.SDL_built" ]; then
     build_3rdparty_autogen game/SDL2 \
         "--disable-video-x11 --enable-video-wayland --enable-wayland-shared \
-        --enable-video-mir --disable-mir-shared \
+        --disable-video-mir --disable-mir-shared \
         --enable-video-opengles  --disable-video-opengl --disable-video-vulkan \
         --disable-alsa-shared --disable-pulseaudio-shared \
         --enable-pulseaudio --enable-hidapi --enable-libudev --enable-dbus --disable-static" ""

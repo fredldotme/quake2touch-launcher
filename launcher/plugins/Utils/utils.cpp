@@ -24,6 +24,7 @@
 
 #include <stdlib.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 #include "utils.h"
 
@@ -95,8 +96,38 @@ void Utils::runGame(const QString& gameName, char **args)
     setenv("QUAKE2_GAMENAME", gameName.toUtf8().data(), true);
 
     // Allow Mir connection
-    char* appId = getenv("APP_ID");
-    setenv("DESKTOP_FILE_HINT", appId, true);
+    //char* appId = getenv("APP_ID");
+    //setenv("DESKTOP_FILE_HINT", appId, true);
+
+    setenv("EGL_PLATFORM", "wayland", true);
+    setenv("SDL_VIDEODRIVER", "wayland", true);
+
+    QDirIterator iterator(QStringLiteral("/proc/self/fd"),
+                          QStringList(), QDir::Dirs | QDir::NoDotAndDotDot, QDirIterator::NoIteratorFlags);
+    while (iterator.hasNext()) {
+        const auto fdPath = iterator.next();
+        const auto crumbs = fdPath.split('/');
+        if (crumbs.length() < 1)
+            continue;
+        const auto fdString = crumbs[crumbs.length() - 1];
+        bool ok;
+        const int fd = fdString.toInt(&ok, 10);
+        if (!ok)
+            continue;
+
+        switch (fd) {
+        case 0:
+        case 1:
+        case 2:
+            continue;
+        default:
+            break;
+        }
+
+        close(fd);
+    }
+
+    QThread::msleep(500);
 
     execvp(args[0], args);
 }
