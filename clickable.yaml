@@ -18,7 +18,6 @@ dependencies_target:
   - libvorbis-dev
   - libgles2-mesa-dev
   - libegl1-mesa-dev
-  - libmirclient-dev
   - libwayland-dev
   - libsdl2-dev
   - libopenal-dev

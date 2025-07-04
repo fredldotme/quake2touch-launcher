@@ -47,11 +47,15 @@ private:
     void unpack();
 
     QProcess m_unzipProcess;
+    //QProcess m_gameProcess;
 
 signals:
     void gamesChanged();
     void unpackSucceeded();
     void unpackFailed();
+
+    void gameStarted();
+    void gameFinished();
 };
 
 #endif

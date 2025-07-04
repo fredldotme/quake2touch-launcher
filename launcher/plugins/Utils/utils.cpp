@@ -92,44 +92,34 @@ void Utils::joinMultiplayerGame(const QString& gameName, const QString& serverAd
 
 void Utils::runGame(const QString& gameName, char **args)
 {
+    QStringList qargs;
+    QProcessEnvironment qenv = QProcessEnvironment::systemEnvironment();
+    int i = 0;
+    char* arg = nullptr;
+    while ((arg = args[i++]) != nullptr) {
+        qargs << QString::fromUtf8(arg);
+    }
+
     // Set gamename for the engine to pick up the right .pak files
-    setenv("QUAKE2_GAMENAME", gameName.toUtf8().data(), true);
+    qenv.insert("QUAKE2_GAMENAME", gameName);
 
     // Allow Mir connection
     //char* appId = getenv("APP_ID");
     //setenv("DESKTOP_FILE_HINT", appId, true);
 
-    setenv("EGL_PLATFORM", "wayland", true);
-    setenv("SDL_VIDEODRIVER", "wayland", true);
+    qenv.insert("EGL_PLATFORM", "wayland");
+    qenv.insert("SDL_VIDEODRIVER", "wayland");
 
-    QDirIterator iterator(QStringLiteral("/proc/self/fd"),
-                          QStringList(), QDir::Dirs | QDir::NoDotAndDotDot, QDirIterator::NoIteratorFlags);
-    while (iterator.hasNext()) {
-        const auto fdPath = iterator.next();
-        const auto crumbs = fdPath.split('/');
-        if (crumbs.length() < 1)
-            continue;
-        const auto fdString = crumbs[crumbs.length() - 1];
-        bool ok;
-        const int fd = fdString.toInt(&ok, 10);
-        if (!ok)
-            continue;
+    QProcess gameProcess;
+    gameProcess.setProgram(qargs[0]);
+    gameProcess.setArguments(qargs);
+    gameProcess.setProcessEnvironment(qenv);
 
-        switch (fd) {
-        case 0:
-        case 1:
-        case 2:
-            continue;
-        default:
-            break;
-        }
-
-        close(fd);
-    }
-
-    QThread::msleep(500);
-
-    execvp(args[0], args);
+    gameProcess.start();
+    gameProcess.waitForStarted();
+    Q_EMIT gameStarted();
+    gameProcess.waitForFinished(-1);
+    Q_EMIT gameFinished();
 }
 
 void Utils::deleteGame(const QString& gameName)
