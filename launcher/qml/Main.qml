@@ -41,8 +41,9 @@ Window {
     property string selectedGameName : ""
     readonly property int typicalMargin : units.gu(2)
 
-    Item {
+    Rectangle {
         anchors.fill: parent
+        color: theme.palette.normal.background
 
         Settings {
             id: userSettings
